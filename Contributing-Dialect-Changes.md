@@ -64,7 +64,7 @@ There are a number of options when creating SQL grammar including:
 
 Grammar|Used For|Example
 ---|---|---
-`"KEYWORD"`|Having a raw SQL keyword|`"SELECT"`,
+`"KEYWORD"`|Having a raw SQL keyword|`"SELECT"`
 `Sequence`|Having a set of Keywords or Segments|`Sequence("SELECT", Ref("SelectClauseElementSegment"), "FROM"...)`
 `AnyNumberOf`|Choose from a set of options which may be repeated|`"SELECT", AnyNumberOf(Ref("WildcardExpressionSegment"), Ref("ColumnReferenceSegment")...)...`
 `OneOf`|A more restrictive from a set of `AnyNumberOf` limited to just one option|`OneOf("INNER","OUTER","FULL"), "JOIN"`
