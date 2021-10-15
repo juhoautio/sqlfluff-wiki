@@ -110,9 +110,9 @@ An inline comment, for example, is defined as this:
         ),
 ```
 
-That is a anything after `--` or `#` to the newline. This allows us to deal with that whole comment as one lexed block and so the don't need to define how to parse it (we even give that a parsing segment name here - `CommentSegment`).
+That is, anything after `--` or `#` to the newline. This allows us to deal with that whole comment as one lexed block and so we don't need to define how to parse it (we even give that a parsing segment name here - `CommentSegment`).
 
-For simple grammar addition, you won't need to to touch the lexing definitions as they usually cover most common one already. But for slightly more complicated ones, you may have to add to this. So if you see lexing errors then you may have to add something here.
+For simple grammar addition, you won't need to to touch the lexing definitions as they usually cover most common ones already. But for slightly more complicated ones, you may have to add to this. So if you see lexing errors then you may have to add something here.
 
 Lexing happens in order. So it starts reading the SQL from the start, until it has the longest lexing match, then it chomps that up, files it away as a symbol to deal with later in the parsing, and starts again with the remaining text. So if you have `SELECT * FROM table WHERE col1 = 12345` it will not break that up into `S`, `E`, `L`...etc., but instead into `SELECT`, `*`, `FROM`, `table`...etc.
 
@@ -132,7 +132,7 @@ Note the `before="equals"` which means we tell the lexer the order of preference
 
 ### Keywords
 
-Most dialect have a keywords file, listing all the keywords. Some dialects just inherit the ANSI keywords and then add or remove keywords from that. Not quite as accurate as managing the actual keywords, but a lot quicker and easier to manage usually!
+Most dialects have a keywords file, listing all the keywords. Some dialects just inherit the ANSI keywords and then add or remove keywords from that. Not quite as accurate as managing the actual keywords, but a lot quicker and easier to manage usually!
 
 Keywords are separated into RESERVED and UNRESERVED lists. RESERVED keywords have extra restrictions meaning they cannot be used as identifiers. If using a keyword in grammar (e.g. `"SELECT"`), then it needs to be in one of the Keywords lists so you may have to add it. And if editing the main ANSI dialect, and adding the the ANSI keyword list, then take care to consider if it needs added to the other dialects if they will inherit this syntax - usually yes unless explicitly overridden in those dialects.
 
@@ -196,7 +196,7 @@ This was in the `postgres` dialect, so I had a look at (`dialect_postgres.py`)[h
 
 So it allowed returning a table, or a datatype.
 
-Fixing the issuie was as simple as adding the `SETOF` structure as another return option:
+Fixing the issue was as simple as adding the `SETOF` structure as another return option:
 
 ```py
     parse_grammar = Sequence(
