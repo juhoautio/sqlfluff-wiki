@@ -80,7 +80,7 @@ Some of the keywords have extra params you can give them, the most commonly used
         Ref("WhereClauseSegment", optional=True),
     )
 ```
-You can see the `WHERE` clause it optional (many's a head has been shaken because of deletes without `WHERE` clauses I'm sure, but that's what the syntax allows!).
+You can see the `WHERE` clause it optional (many's a head has been shaken because of deletes without `WHERE` clauses I'm sure, but that's what SQL syntax allows!).
 
 Using these Grammar options, it's possible to build up complex structures to define SQL syntax.
 
@@ -91,13 +91,13 @@ A lot of SQL is the same no matter which particular type of SQL you are using. T
 
 For this reason, SQLFluff allows creating dialects, which can have different grammar from each other.
 
-SQLFluff has all the dialect in the [`src/sqlfluff/dialects`](https://github.com/sqlfluff/sqlfluff/tree/main/src/sqlfluff/dialects) folder. The main dialect file (that every other dialect ultimately inherits from is the [`dialect_ansi.py`](https://github.com/sqlfluff/sqlfluff/blob/main/src/sqlfluff/dialects/dialect_ansi.py) file.
+SQLFluff has all the dialect in the [`src/sqlfluff/dialects`](https://github.com/sqlfluff/sqlfluff/tree/main/src/sqlfluff/dialects) folder. The main dialect file (that every other dialect ultimately inherits from) is the [`dialect_ansi.py`](https://github.com/sqlfluff/sqlfluff/blob/main/src/sqlfluff/dialects/dialect_ansi.py) file.
 
 In SQLFluff, a dialect is basically a file a copy of the original ANSI dialect, which then adds or overrides parsing segments. If a dialect has the exact same `SELECT`, `FROM` and `WHERE` clauses as ANSI but a different `ORDER BY` syntax, then only the `ORDER BY` clause needs to overridden so the dialect file will be very small. For some of the other dialects where there's lots of differences (T-SQL!) you may be overriding a lot more.
 
 ### Lexing
 
-I kind of skipped this part, but before a piece of SQL can be parsed, it is lexed - that is split up into symbols, and logical groupings.
+I kind of skipped this part, but before a piece of SQL can be _parsed_, it is _lexed_ - that is split up into symbols, and logical groupings.
 
 An inline comment for example is defined as this:
 
@@ -110,11 +110,11 @@ An inline comment for example is defined as this:
         ),
 ```
 
-That is a anything after `--` or `#` to the newline. This allows us to deal with that whole comment as one lexed block and so the don't need to define how to parse it (we even give that a parsing segment name here - `CommentSegment).
+That is a anything after `--` or `#` to the newline. This allows us to deal with that whole comment as one lexed block and so the don't need to define how to parse it (we even give that a parsing segment name here - `CommentSegment`).
 
-For simple grammar addition, you won't need to to touch the lexing definitions as they usually cover most common. But for slightly more complicated ones, you may have to add to this. But if you see lexing errors then you may have to add something here.
+For simple grammar addition, you won't need to to touch the lexing definitions as they usually cover most common one already. But for slightly more complicated ones, you may have to add to this. So if you see lexing errors then you may have to add something here.
 
-Lexing happens in order. So it starts reading the file from the start, until it has the longest lexing match, then it chomps that up, files it away as a symbol to deal with later in the parsing, and starts again with the remaining file. So if you have a number `SELECT * FROM table WHERE col1 = 12345` it will not break that up into `S`, `E`, `L`...etc., but instead into `SELECT`, `*`, `FROM`, `table`...etc.
+Lexing happens in order. So it starts reading the file from the start, until it has the longest lexing match, then it chomps that up, files it away as a symbol to deal with later in the parsing, and starts again with the remaining text. So if you have a number `SELECT * FROM table WHERE col1 = 12345` it will not break that up into `S`, `E`, `L`...etc., but instead into `SELECT`, `*`, `FROM`, `table`...etc.
 
 An example of where you might have to override lexing, is in BigQuery we have parameterised variables which are of the form `@variable_name`. The ANSI lexer doesn't recognise the `@` sign, so you could add a lexer for that. But a better solution, since you don't need to know two parts (`@` and `variable_name`) is to just tell the lexer to go ahead and parse the whole thing into one big symbol, that we will then use later in the parser:
 
