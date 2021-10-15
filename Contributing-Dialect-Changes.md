@@ -34,7 +34,7 @@ class SelectClauseSegment(BaseSegment):
     parse_grammar = Ref("SelectClauseSegmentGrammar")
 ```
 
-This says the `SelectClauseSegment` starts with `SELECT` or `SELECT *` and ends when it encouters a `FROM`, `WHERE`, `ORDER`...etc. line.
+This says the `SelectClauseSegment` starts with `SELECT` or `SELECT *` and ends when it encounters a `FROM`, `WHERE`, `ORDER`...etc. line.
 
 The `match_grammar` is what is used primarily to try to match and parse the statement. It can be relatively simple (as in this case), to quickly match just the start and terminating clauses. If that is the case, then a `parse_grammar` is needed to actually delve into the statement itself with all the clauses and parts it is made up of. The `match_grammar` is used to quickly identify the start and end of this block, as parsing can be quite intensive and complicated as the parser tries various combinations of clauses (particularly optional ones like the `WildcardExpressionSegment` above, or when there is a choice of statements that could be used).
 
