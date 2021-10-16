@@ -134,7 +134,13 @@ Note the `before="equals"` which means we tell the lexer the order of preference
 
 Most dialects have a keywords file, listing all the keywords. Some dialects just inherit the ANSI keywords and then add or remove keywords from that. Not quite as accurate as managing the actual keywords, but a lot quicker and easier to manage usually!
 
-Keywords are separated into RESERVED and UNRESERVED lists. RESERVED keywords have extra restrictions meaning they cannot be used as identifiers. If using a keyword in grammar (e.g. `"SELECT"`), then it needs to be in one of the Keywords lists so you may have to add it. And if editing the main ANSI dialect, and adding the the ANSI keyword list, then take care to consider if it needs added to the other dialects if they will inherit this syntax - usually yes unless explicitly overridden in those dialects.
+Keywords are separated into RESERVED and UNRESERVED lists. RESERVED keywords have extra restrictions meaning they cannot be used as identifiers. If using a keyword in grammar (e.g. `"SELECT"`), then it needs to be in one of the Keywords lists so you may have to add it or you might see error's like this (showing `"NAN"` has not been added as a Keyword in this dialect):
+
+```
+RuntimeError: Grammar refers to 'NanKeywordSegment' which was not found in the redshift dialect
+```
+
+Also if editing the main ANSI dialect, and adding the the ANSI keyword list, then take care to consider if it needs added to the other dialects if they will inherit this syntax - usually yes unless explicitly overridden in those dialects.
 
 
 ## Example of contributing a syntax fix
