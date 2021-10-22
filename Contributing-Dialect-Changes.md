@@ -324,7 +324,7 @@ This was a little restrictive so changing that to this solved the problem:
 
 You can see we simply replaced the `"GROUP"` by a `Sequence("GROUP", "BY")` so it would _only_ match if both words were given. Rechecking the example with this changed code, showed it now parsed. We did the same for `"ORDER"`, and also changed a few other places in the code with similar clauses and added a test case (covered below) and submitted [pull request #1546](https://github.com/sqlfluff/sqlfluff/pull/1546/files) to fix this.
 
-### Testing your changes
+## Testing your changes
 
 So you've made your fix, you've tested it fixed the original problem so just submit that change, and all is good now?
 
@@ -334,17 +334,17 @@ Well, no. You want to do two further things:
 
 To test your changes you'll need to have your environment set up (again see the [CONTRIBUTING.md](https://github.com/sqlfluff/sqlfluff/blob/main/CONTRIBUTING.md) file for how to do that).
 
-#### Adding test cases for your changes
+### Adding test cases for your changes
 
-Adding a test case is simple. Just add a SQL file to [`test/fixtures/dialects/`](https://github.com/sqlfluff/sqlfluff/tree/main/test/fixtures/dialects) in the appropriate dialect directory. You can either edit an existing SQL file test case (e.g. if adding something similar to what's in there) or create a new one.
+Adding a test case is simple. Just add a SQL file to [`test/fixtures/dialects/`](https://github.com/sqlfluff/sqlfluff/tree/main/test/fixtures/dialects) in the appropriate dialect directory. You can either expand an existing SQL file test case (e.g. if adding something similar to what's in there) or create a new one.
 
-I advise adding the original SQL raised in the issue, and if you have examples from the official syntax, then they are always good test case to add. For example, the Snowflake documentation [has an example section at the bottom of every syntax definition](https://docs.snowflake.com/en/sql-reference/sql/select.html#examples) so just copy all them into your example file too.
+I advise adding the original SQL raised in the issue, and if you have examples from the official syntax, then they are always good test cases to add as well. For example, the Snowflake documentation [has an example section at the bottom of every syntax definition](https://docs.snowflake.com/en/sql-reference/sql/select.html#examples) so just copy all them into your example file too.
 
-#### YML test fixture files
+### YML test fixture files
 
-As well as the SQL files, we have YAML equivalents of the statements. This is the parsed version of the SQL, and having these in our source code, allows us to easily see if they change. For most cases (except adding new test cases obviously!) you would not expect unrelated YML files to change so this is a good check.
+As well as the SQL files, we have YAML equivalents of the test SQL statements. This is the parsed version of the SQL, and having these in our source code, allows us to easily see if they change, so if someone redefines a syntac, which changes how a SQL statement is parse, then the SQL won't change but the parse tree does, so by having that in our source code, and so checking that in with any pull request, we can spot that and make sure we're comfortable the change is expected. For most cases (except adding new test cases obviously!) you would not expect unrelated YML files to change so this is a good check.
 
-To regenerate all the YAML files when you add or edit any SQL files run the following command:
+To regenerate all the YAML files when you add or edit any test fixture SQL files run the following command:
 
 ```
 python test/generate_parse_fixture_yml.py
@@ -372,7 +372,7 @@ pytest -k L048 -v test
 
 And finally to run the full test suite (but only on one Python version, and without dbt) use this:
 
-```
+```bash
 tox -e generate-fixture-yml,cov-init,py38,cov-report,linting
 ```
 
@@ -380,13 +380,19 @@ I like to kick that last one off just before opening a PR but does take a good 1
 
 Regardless of what testing you do, GitHub will run the full regression suite when the PR is opened or updated.
 
-#### Black code linting
+### Black code linting
 
 We use `flake8` to lint our python code (being a linter ourselves we should have high quality code!). Our CI, or the `tox` commands above will run this and flag any errors.
 
-In most cases running `black` on the python file(s) will correct any errors (e.g. line formatting) but for some you'll need to run `flake8` to see the issues and manually correct them.
+In most cases running `black` on the python file(s) will correct any simple errors (e.g. line formatting) but for some you'll need to run `flake8` to see the issues and manually correct them.
 
+## Submitting your change
 
+We use the standards GitHub workflow so simply fork the repo, clone it locally, make the change, push it to your fork, then open a pull request back to the original sqlfluff repo. The CI tests will run, and after 5-10mins should complete. If all green, then a maintainer will pick it up as soon as they can. Have a good, easy to understand, small PR with all the tests passing, makes it easier to review so more likely to be merged quickly.
+
+## Questions
+
+Feel free to open up any issues on GitHub, or join the [Slack channel](https://join.slack.com/t/sqlfluff/shared_invite/zt-o1f4x0e8-pZzarAIlQmKj_6ZwD16w0g) for any quick questions to the community/maintainers.
 
 
 
