@@ -165,7 +165,7 @@ and instead returned this message:
 Found unparsable section: 'CREATE OR REPLACE FUNCTION crw_public.po...'
 ```
 
-This was in the `postgres` dialect, so I had a look at (`dialect_postgres.py`)[https://github.com/sqlfluff/sqlfluff/blob/main/src/sqlfluff/dialects/dialect_postgres.py] and found the code in `CreateFunctionStatementSegment` which had the following:
+This was in the `postgres` dialect, so I had a look at [`dialect_postgres.py`](https://github.com/sqlfluff/sqlfluff/blob/main/src/sqlfluff/dialects/dialect_postgres.py) and found the code in `CreateFunctionStatementSegment` which had the following:
 
 ```py
     parse_grammar = Sequence(
