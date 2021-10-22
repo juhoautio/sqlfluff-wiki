@@ -36,11 +36,13 @@ class SelectClauseSegment(BaseSegment):
 
 This says the `SelectClauseSegment` starts with `SELECT` or `SELECT *` and ends when it encounters a `FROM`, `WHERE`, `ORDER`...etc. line.
 
-The `match_grammar` is what is used primarily to try to match and parse the statement. It can be relatively simple (as in this case), to quickly match just the start and terminating clauses. If that is the case, then a `parse_grammar` is needed to actually delve into the statement itself with all the clauses and parts it is made up of. The `match_grammar` is used to quickly identify the start and end of this block, as parsing can be quite intensive and complicated as the parser tries various combinations of clauses (particularly optional ones like the `WildcardExpressionSegment` above, or when there is a choice of statements that could be used).
+The `match_grammar` is what is used primarily to try to match and parse the statement. It can be relatively simple (as in this case), to quickly match just the start and terminating clauses. If that is the case, then a `parse_grammar` is needed to actually delve into the statement itself with all the clauses and parts it is made up of. The `parse_grammar` can be fully defined in the class or, like above example, reference another class with the definition.
+
+The `match_grammar` is used to quickly identify the start and end of this block, as parsing can be quite intensive and complicated as the parser tries various combinations of classes and segments to match the SQL (particularly optional ones like the `WildcardExpressionSegment` above, or when there is a choice of statements that could be used).
 
 For some statements a quick match is not needed, and so we can delve straight into the full grammar definition. In that case the `match_grammar` will be sufficient and we don't need the optional `parse_grammar`.
 
-Here's another statement, which only uses the `match_grammar` and doesn't have or need an optional `parse_grammar`:
+Here's another statement, which only uses the `match_grammar` and doesn't have (or need!) an optional `parse_grammar`:
 
 ```py
 @ansi_dialect.segment()
@@ -56,7 +58,7 @@ class JoinOnConditionSegment(BaseSegment):
     )
 ```
 
-You will have noticed that a segment can refer to another segment, and that is a good way of splitting up a complex SQL expression into it's component parts to manage and handle them separately.
+You will have noticed that a segment can refer to another segment, and that is a good way of splitting up a complex SQL expression into its component parts to manage and handle them separately.
 
 ### Segment grammar options
 
