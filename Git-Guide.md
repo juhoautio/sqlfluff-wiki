@@ -1,45 +1,5 @@
 Many of the contributors may not be familiar with Git and it can be a confusing world for those new to it with perplexing terms like *clone*, *fork*, *branch*, *merge conflicts* and *rebase*. This guide aims to provide some information to those of you new to Git about the best way we think of working with it it is and also serve as a quick reference to some of the Git terms, or commands to use.
 
-## Table Of Contents
-
-##### Table of Contents  
-- [Introduction To Git](#introduction-to-git)  
-  - [What is Git](#what-is-git)
-  - [What is GitHub and how is it different than Git?](#what-is-github-and-how-is-it-different-than-git)  
-  - [Installing Git](#installing-git)
-  - [Git repos](#git-repos)
-  - [Git branches](#git-branches)
-  - [GitHub Pull Requests](#github-pull-requests)
-  - [GitHub Forks](#github-forks)
-  - [Cloning a Git Repo](#cloning-a-git-repo)
-  - [Git Merge Conflicts](#git-merge-conflicts)
-- [Git workflow for SQLFluff contributions](#git-workflow-for-sqlfluff-contributions)
-  - [Resynching your main branch to upstream](#resyncing-your-main-branch-to-upstream)
-    - [Commands to force reset your main branch to upstream](#commands-to-force-reset-your-main-branch-to-upstream)
-  - [Creating and working on a branch](#creating-and-working-on-a-branch)
-    - [Committing Changes - To Vi or Not to Vi](#committing-changes---to-vi-or-not-to-vi)
-    - [Keeping your branch up to date](#keeping-your-branch-up-to-date)
-    - [Switching between branches](#switching-between-branches)
-  - [Opening a Pull Request](#opening-a-pull-request)
-  - [Actioning feedback from pull requests](#actioning-feedback-from-pull-requests)
-    - [Merge conflict checks](#merge-conflict-checks)
-    - [Linter checks](#linter-checks)
-    - [Code review feedback](#code-review-feedback)
-  - [Draft pull requests](#draft-pull-requests)
-  - [Reviewing pull requests](#reviewing-pull-requests)
-- [GitHub Desktop](#github-desktop)  
-  - [Installing GitHub Desktop](#installing-github-desktop)
-  - [Cloning the HTTP Archive](#cloning-the-http-archive)  
-  - [Navigating GitHub Desktop](#navigating-github-desktop)
-  - [Updating your repository (Pull origin)](#updating-your-repository-pull-origin)
-  - [Making your own edits (creating a branch)](#making-your-own-edits-creating-a-branch)
-  - [Publishing your branch](#publishing-your-branch)
-  - [Editing your branch](#editing-your-branch)
-  - [Committing and pushing your edits to the web](#committing-and-pushing-your-edits-to-the-web)
-  - [Getting your changes accepted](#getting-your-changes-accepted)
-  - [Working with SQLFluff](#working-with-the-web-almanac)
-- [Glossary of terms](#glossary-of-terms)
-
 
 ## Introduction to Git
 
