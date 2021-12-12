@@ -342,12 +342,12 @@ I advise adding the original SQL raised in the issue, and if you have examples f
 
 ### YML test fixture files
 
-As well as the SQL files, we have YAML equivalents of the test SQL statements. This is the parsed version of the SQL, and having these in our source code, allows us to easily see if they change, so if someone redefines a syntac, which changes how a SQL statement is parse, then the SQL won't change but the parse tree does, so by having that in our source code, and so checking that in with any pull request, we can spot that and make sure we're comfortable the change is expected. For most cases (except adding new test cases obviously!) you would not expect unrelated YML files to change so this is a good check.
+As well as the SQL files, we have YAML equivalents of the test SQL statements. This is the parsed version of the SQL, and having these in our source code, allows us to easily see if they change, so if someone redefines a syntax, which changes how a SQL statement is parsed, then the SQL won't change but the parse tree does, so by having that in our source code, and so checking that in with any pull request, we can spot that and make sure we're comfortable the change is expected. For most cases (except adding new test cases obviously!) you would not expect unrelated YML files to change so this is a good check.
 
 To regenerate all the YAML files when you add or edit any test fixture SQL files run the following command:
 
 ```
-python test/generate_parse_fixture_yml.py
+tox -e generate-fixture-yml
 ```
 
 It takes a few mins to run, and should regenerate all the YAML files. You can then do a `git status` to see any differences.
@@ -356,18 +356,18 @@ It takes a few mins to run, and should regenerate all the YAML files. You can th
 
 There's a few ways of running the test suite.
 
-You could just run the `tox` command, but this will run all the test suites, for various python versions, and with and without dbt, and take a long time. Best to leave that to our CI infrastructure. You just wanna run what you need to have reasonable confidence before submitting.
+You could just run the `tox` command, but this will run all the test suites, for various python versions, and with and without dbt, and take a long time. Best to leave that to our CI infrastructure. You just want to run what you need to have reasonable confidence before submitting.
 
 The run just the dialect tests you can do this:
 
 ```bash
-pytest test/dialects/dialects_test.py
+tox -e py38 -- test/dialects/dialects_test.py
 ```
 
 Or, if editing a rule, you can just run the tests for that one rule, for example to test L048 tests:
 
 ```bash
-pytest -k L048 -v test
+tox -e py38 -- -k L048 test
 ```
 
 And finally to run the full test suite (but only on one Python version, and without dbt) use this:
