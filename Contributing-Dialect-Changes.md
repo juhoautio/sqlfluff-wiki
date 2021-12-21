@@ -342,7 +342,7 @@ I advise adding the original SQL raised in the issue, and if you have examples f
 
 ### YML test fixture files
 
-As well as the SQL files, we have YAML equivalents of the test SQL statements. This is the parsed version of the SQL, and having these in our source code, allows us to easily see if they change, so if someone redefines a syntax, which changes how a SQL statement is parsed, then the SQL won't change but the parse tree does, so by having that in our source code, and so checking that in with any pull request, we can spot that and make sure we're comfortable the change is expected. For most cases (except adding new test cases obviously!) you would not expect unrelated YML files to change so this is a good check.
+In addition to the SQL files, we have auto-generated YAML counterparts for them. YAML contains the parsed version of the SQL, and having these in our source code, allows us to easily see if they change, so if someone redefines a syntax, which changes how a SQL statement is parsed, then the SQL won't change but the parse tree does, so by having that in our source code, and so checking that in with any pull request, we can spot that and make sure we're comfortable the change is expected. For most cases (except adding new test cases obviously!) you would not expect unrelated YML files to change so this is a good check.
 
 To regenerate all the YAML files when you add or edit any test fixture SQL files run the following command:
 
@@ -350,19 +350,44 @@ To regenerate all the YAML files when you add or edit any test fixture SQL files
 tox -e generate-fixture-yml
 ```
 
-It takes a few mins to run, and should regenerate all the YAML files. You can then do a `git status` to see any differences.
+It regenerates all the YAML files. You can then do a `git status` to see any differences.
 
-### Running the test suite
+When making changes, make sure to check the post-parse structure from the test output or from the associated YAML file: check that each query element is typed correctly. Typical bugs can be that a standalone keyword (such as `INTERVAL`) is parsed as a function name, or that an element that should be `date_part` is parsed as an `identifier`. Typically there is no need to write assertions by hand - but it's the developer's responsibility to verify the structure from auto-generated YAML. One should not assume that everything is working just because no parsing error is raised.
 
-There's a few ways of running the test suite.
+### Running the tests
 
-You could just run the `tox` command, but this will run all the test suites, for various python versions, and with and without dbt, and take a long time. Best to leave that to our CI infrastructure. You just want to run what you need to have reasonable confidence before submitting.
+For the basic setup, see first: [Developing and Running SQLFluff Locally](https://github.com/sqlfluff/sqlfluff/blob/main/CONTRIBUTING.md#developing-and-running-sqlfluff-locally).
 
-The run just the dialect tests you can do this:
+You could just run the `tox` command, but this will run all tests, for various python versions, and with and without dbt, and take a long time. Best to leave that to our CI infrastructure. You just want to run what you need to have reasonable confidence before submitting.
+
+#### Testing a single fixture
+
+The `dialects_test` is parametrized to automatically pick all files under `test/fixtures/dialects/`.
+
+For example if you're adding or modifying `dialects/hive/select_interval.sql`, you can test that with:
+
+```bash
+tox -e py38 -- -s test/dialects/dialects_test.py -k hive-select_interval.sql]
+```
+The `-s` flag for pytest enables printing of post-parse structure, which allows you to quickly check that each query element is typed correctly. Same can be seen in the generated fixture YAML file.
+
+To run it a bit faster, you can invoke `pytest` directly (requires that you have activated the project venv):
+```bash
+pytest -s test/dialects/dialects_test.py -k hive-select_interval.sql]
+```
+
+#### Running all dialect tests
 
 ```bash
 tox -e py38 -- test/dialects/dialects_test.py
 ```
+
+#### Running tests for a single rule
+
+<!--
+TODO question: is this relevant for "dialect changes" documentation?
+In other words, do "dialect changes" also sometimes (or even often) involve "rule changes"?
+-->
 
 Or, if editing a rule, you can just run the tests for that one rule, for example to test L048 tests:
 
@@ -370,17 +395,30 @@ Or, if editing a rule, you can just run the tests for that one rule, for example
 tox -e py38 -- -k L048 test
 ```
 
-And finally to run the full test suite (but only on one Python version, and without dbt) use this:
+#### Final checks before committing
 
+For formatting and linting it's usually enough to rely on the [pre-commit hook](https://github.com/sqlfluff/sqlfluff/blob/main/CONTRIBUTING.md#pre-commit-config).
+
+Run all tests (but only on one Python version, and without dbt):
+
+```bash
+tox -e py38
+```
+
+I like to kick that off just before opening a PR but does take ~10 minutes to run.
+
+If you want also coverage & linting, run this instead (takes more time):
 ```bash
 tox -e generate-fixture-yml,cov-init,py38,cov-report,linting
 ```
 
-I like to kick that last one off just before opening a PR but does take a good 10mins to run.
+The rest can be left for the CI to check.
 
 Regardless of what testing you do, GitHub will run the full regression suite when the PR is opened or updated.
 
 ### Black code linting
+
+These tools are run automatically by the [pre-commit hook](https://github.com/sqlfluff/sqlfluff/blob/main/CONTRIBUTING.md#pre-commit-config).
 
 We use `flake8` to lint our python code (being a linter ourselves we should have high quality code!). Our CI, or the `tox` commands above will run this and flag any errors.
 
